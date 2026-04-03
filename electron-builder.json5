@@ -1,0 +1,34 @@
+{
+  "appId": "com.cf-tunnel-manager.app",
+  "productName": "CF Tunnel Manager",
+  "directories": {
+    "output": "release"
+  },
+  "files": [
+    "dist",
+    "dist-electron"
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      },
+      {
+        "target": "portable",
+        "arch": ["x64"]
+      }
+    ],
+    "icon": "build/icon.ico"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "shortcutName": "CF Tunnel Manager"
+  },
+  "publish": {
+    "provider": "github",
+    "owner": "itmowang",
+    "repo": "cf-tunnel-manager"
+  }
+}
