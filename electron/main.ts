@@ -7,6 +7,7 @@ import { TunnelManager } from './tunnelManager'
 import { loadData, saveData } from './configStore'
 import { downloadCloudflared, getDefaultCloudflaredPath, isCloudflaredDownloaded } from './cloudflaredDownloader'
 import { decodeToken, getTunnelConfig, updateTunnelConfig, verifyToken, listZones, listDnsRecords, listAccounts, listTunnels, getTunnelToken, ensureTunnelDns } from './cloudflareApi'
+import { setupAutoUpdater } from './updater'
 
 let mainWindow: BrowserWindow | null = null
 const tunnelManager = new TunnelManager()
@@ -187,7 +188,10 @@ function registerIpcHandlers() {
 
 app.whenReady().then(() => {
   createWindow()
-  if (mainWindow) createTray(mainWindow)
+  if (mainWindow) {
+    createTray(mainWindow)
+    setupAutoUpdater(mainWindow)
+  }
   registerIpcHandlers()
 
   // 加载 cloudflared 路径

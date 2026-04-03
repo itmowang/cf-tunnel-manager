@@ -44,6 +44,13 @@ export interface ElectronAPI {
   // 事件监听
   onTunnelStatusUpdate: (callback: (data: any) => void) => () => void
   onTunnelLog: (callback: (data: any) => void) => () => void
+
+  // 自动更新
+  checkUpdate: () => Promise<{ success: boolean; version?: string; error?: string }>
+  downloadUpdate: () => Promise<{ success: boolean; error?: string }>
+  installUpdate: () => Promise<void>
+  getAppVersion: () => Promise<string>
+  onUpdateStatus: (callback: (data: any) => void) => () => void
 }
 
 declare global {

@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useTunnelStore } from '@/store/tunnelStore'
-import { CheckCircle, XCircle, RefreshCw, Download, Eye, EyeOff } from 'lucide-react'
+import { CheckCircle, XCircle, RefreshCw, Download, Eye, EyeOff, ArrowUpCircle } from 'lucide-react'
 
 export default function SettingsPage() {
   const { appConfig, setAppConfig } = useTunnelStore()
@@ -18,6 +18,10 @@ export default function SettingsPage() {
   const [showToken, setShowToken] = useState(false)
   const [verifying, setVerifying] = useState(false)
   const [tokenStatus, setTokenStatus] = useState<'idle' | 'valid' | 'invalid'>('idle')
+
+  // 自动更新
+  const [appVersion, setAppVersion] = useState('')
+  const [updateStatus, setUpdateStatus] = useState<any>(null)
   const [tokenError, setTokenError] = useState('')
 
   const checkCf = async () => {
@@ -29,15 +33,18 @@ export default function SettingsPage() {
 
   useEffect(() => {
     checkCf()
-    // 加载已保存的 API Token
     if (appConfig.cfApiToken) {
       setApiToken(appConfig.cfApiToken)
       setTokenStatus('valid')
     }
-    const cleanup = window.electronAPI?.onDownloadProgress((data: { percent: number; status: string }) => {
+    // 获取版本号
+    window.electronAPI?.getAppVersion().then(v => setAppVersion(v || '0.1.0'))
+    // 监听更新状态
+    const cleanup = window.electronAPI?.onUpdateStatus((data: any) => setUpdateStatus(data))
+    const cleanup2 = window.electronAPI?.onDownloadProgress((data: { percent: number; status: string }) => {
       setDownloadProgress(data)
     })
-    return () => cleanup?.()
+    return () => { cleanup?.(); cleanup2?.() }
   }, [])
 
   const handleBrowse = async () => {
@@ -202,6 +209,71 @@ export default function SettingsPage() {
             <input type="checkbox" checked={appConfig.autoStart} onChange={(e) => setAppConfig({ autoStart: e.target.checked })} className="rounded" />
             <span className="text-sm">开机自启动</span>
           </label>
+        </CardContent>
+      </Card>
+
+      {/* 关于与更新 */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>关于</CardTitle>
+              <CardDescription>CF Tunnel Manager v{appVersion}</CardDescription>
+            </div>
+            {updateStatus?.status === 'available' && (
+              <Badge variant="default" className="flex items-center gap-1">
+                <ArrowUpCircle className="h-3 w-3" /> 有新版本
+              </Badge>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {(!updateStatus || updateStatus.status === 'up-to-date') && (
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-500" />
+              <span className="text-sm">已是最新版本</span>
+              <Button size="sm" variant="ghost" onClick={() => window.electronAPI?.checkUpdate()}>
+                <RefreshCw className="h-3 w-3 mr-1" /> 检查更新
+              </Button>
+            </div>
+          )}
+          {updateStatus?.status === 'checking' && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <RefreshCw className="h-4 w-4 animate-spin" /> 正在检查更新...
+            </div>
+          )}
+          {updateStatus?.status === 'available' && (
+            <div className="space-y-2">
+              <p className="text-sm">发现新版本: v{updateStatus.version}</p>
+              <Button onClick={() => window.electronAPI?.downloadUpdate()}>
+                <Download className="mr-2 h-4 w-4" /> 下载更新
+              </Button>
+            </div>
+          )}
+          {updateStatus?.status === 'downloading' && (
+            <div className="space-y-2">
+              <div className="w-full bg-secondary rounded-full h-2">
+                <div className="bg-primary h-2 rounded-full transition-all duration-300" style={{ width: `${updateStatus.percent}%` }} />
+              </div>
+              <p className="text-xs text-muted-foreground">下载中 {updateStatus.percent}%</p>
+            </div>
+          )}
+          {updateStatus?.status === 'downloaded' && (
+            <div className="space-y-2">
+              <p className="text-sm">v{updateStatus.version} 已下载完成</p>
+              <Button onClick={() => window.electronAPI?.installUpdate()}>
+                立即重启并安装
+              </Button>
+            </div>
+          )}
+          {updateStatus?.status === 'error' && (
+            <div className="space-y-2">
+              <p className="text-xs text-destructive">{updateStatus.error}</p>
+              <Button size="sm" variant="outline" onClick={() => window.electronAPI?.checkUpdate()}>
+                重试
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

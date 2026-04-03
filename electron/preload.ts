@@ -79,4 +79,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.on('tunnel:log', handler)
     return () => ipcRenderer.removeListener('tunnel:log', handler)
   },
+
+  // 自动更新
+  checkUpdate: () => ipcRenderer.invoke('updater:check'),
+  downloadUpdate: () => ipcRenderer.invoke('updater:download'),
+  installUpdate: () => ipcRenderer.invoke('updater:install'),
+  getAppVersion: () => ipcRenderer.invoke('updater:getVersion'),
+  onUpdateStatus: (callback: (data: unknown) => void) => {
+    const handler = (_event: unknown, data: unknown) => callback(data)
+    ipcRenderer.on('updater:status', handler)
+    return () => ipcRenderer.removeListener('updater:status', handler)
+  },
 })
