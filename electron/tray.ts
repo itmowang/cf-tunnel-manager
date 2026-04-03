@@ -1,17 +1,36 @@
 import { Tray, Menu, BrowserWindow, app, nativeImage } from 'electron'
 import path from 'path'
+import fs from 'fs'
 
 let tray: Tray | null = null
 
+function getIconPath(): string {
+  // 开发模式
+  const devPath = path.join(process.cwd(), 'public', 'icon.ico')
+  if (fs.existsSync(devPath)) return devPath
+
+  // 打包后：资源在 app.asar 同级的 dist 目录或 resources 目录
+  const paths = [
+    path.join(__dirname, '../dist/icon.ico'),
+    path.join(__dirname, '../public/icon.ico'),
+    path.join(process.resourcesPath, 'icon.ico'),
+    path.join(app.getAppPath(), 'dist/icon.ico'),
+    path.join(app.getAppPath(), 'public/icon.ico'),
+  ]
+  for (const p of paths) {
+    if (fs.existsSync(p)) return p
+  }
+  return ''
+}
+
 export function createTray(mainWindow: BrowserWindow) {
-  // 使用应用图标
-  const iconPath = path.join(
-    process.env.VITE_PUBLIC || path.join(__dirname, '../public'),
-    'icon.ico'
-  )
+  const iconPath = getIconPath()
   let icon: Electron.NativeImage
   try {
-    icon = nativeImage.createFromPath(iconPath)
+    icon = iconPath ? nativeImage.createFromPath(iconPath) : nativeImage.createEmpty()
+    if (icon.isEmpty() && iconPath) {
+      icon = nativeImage.createEmpty()
+    }
   } catch {
     icon = nativeImage.createEmpty()
   }

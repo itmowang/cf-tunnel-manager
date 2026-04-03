@@ -6,7 +6,8 @@
   },
   "files": [
     "dist",
-    "dist-electron"
+    "dist-electron",
+    "public/icon.ico"
   ],
   "win": {
     "target": [
