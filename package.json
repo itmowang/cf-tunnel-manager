@@ -7,7 +7,6 @@
     "dev": "vite",
     "build": "vite build && electron-builder --win",
     "build:dir": "vite build && electron-builder --win --dir",
-    "publish": "vite build && electron-builder --win --publish always",
     "preview": "vite preview",
     "electron:dev": "vite --config vite.config.ts"
   },

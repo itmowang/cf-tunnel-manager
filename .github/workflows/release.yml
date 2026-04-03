@@ -26,7 +26,18 @@ jobs:
 
       - run: pnpm install
 
-      - name: Build and Publish
+      - name: Build
+        run: pnpm run build
+
+      - name: Create Release and Upload
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            release/*.exe
+            release/*.blockmap
+            release/latest.yml
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: pnpm run publish
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
