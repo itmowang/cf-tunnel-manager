@@ -37,7 +37,7 @@ jobs:
           generate_release_notes: true
           files: |
             release/*.exe
-            release/*.blockmap
+            release/*.exe.blockmap
             release/latest.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -25,10 +25,5 @@
     "oneClick": false,
     "allowToChangeInstallationDirectory": true,
     "shortcutName": "CF Tunnel Manager"
-  },
-  "publish": {
-    "provider": "github",
-    "owner": "itmowang",
-    "repo": "cf-tunnel-manager"
   }
 }

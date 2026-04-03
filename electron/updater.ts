@@ -5,6 +5,13 @@ export function setupAutoUpdater(mainWindow: BrowserWindow) {
   autoUpdater.autoDownload = false
   autoUpdater.autoInstallOnAppQuit = true
 
+  // 配置 GitHub 更新源
+  autoUpdater.setFeedURL({
+    provider: 'github',
+    owner: 'itmowang',
+    repo: 'cf-tunnel-manager',
+  })
+
   const send = (channel: string, data?: unknown) => {
     if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.webContents.send(channel, data)
