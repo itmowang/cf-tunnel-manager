@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { LayoutDashboard, Settings, Cloud, ScrollText } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -12,6 +13,11 @@ const navItems = [
 export function Sidebar() {
   const statuses = useTunnelStore((s) => s.statuses)
   const runningCount = Object.values(statuses).filter((s) => s.status === 'running').length
+  const [version, setVersion] = useState('')
+
+  useEffect(() => {
+    window.electronAPI?.getAppVersion().then(v => setVersion(v || ''))
+  }, [])
 
   return (
     <aside className="w-56 border-r bg-card flex flex-col">
@@ -48,7 +54,7 @@ export function Sidebar() {
             {runningCount} 个隧道运行中
           </div>
         )}
-        <p className="text-xs text-muted-foreground">v0.2.0</p>
+        <p className="text-xs text-muted-foreground">v{version}</p>
         <p className="text-[10px] text-muted-foreground mt-1">
           © <a href="https://github.com/itmowang" target="_blank" rel="noopener" className="hover:underline">魔王</a>
         </p>
