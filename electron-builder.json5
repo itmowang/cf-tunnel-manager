@@ -24,6 +24,10 @@
   "nsis": {
     "oneClick": false,
     "allowToChangeInstallationDirectory": true,
-    "shortcutName": "CF Tunnel Manager"
+    "shortcutName": "CF Tunnel Manager",
+    "artifactName": "CF-Tunnel-Manager-Setup-${version}.${ext}"
+  },
+  "portable": {
+    "artifactName": "CF-Tunnel-Manager-Portable-${version}.${ext}"
   }
 }
