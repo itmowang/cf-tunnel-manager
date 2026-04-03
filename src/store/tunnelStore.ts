@@ -48,12 +48,22 @@ export const useTunnelStore = create<TunnelStore>((set, get) => ({
       return
     }
 
-    const data: StoreData = await api.loadData()
+    const data = (await api.loadData()) as unknown as StoreData
     set({
       tunnels: data.tunnels || [],
       appConfig: { ...get().appConfig, ...data.appConfig },
       initialized: true,
     })
+
+    // 自动启动标记了 autoStart 的隧道
+    const tunnelsToStart = (data.tunnels || []) as TunnelConfig[]
+    setTimeout(() => {
+      for (const t of tunnelsToStart) {
+        if (t.autoStart && t.token) {
+          get().startTunnel(t.id)
+        }
+      }
+    }, 1000)
 
     api.onTunnelStatusUpdate((data: { id: string; status: string; pid?: number; startedAt?: string; error?: string }) => {
       set((state) => ({

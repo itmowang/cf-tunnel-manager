@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Play, Square, Trash2, ScrollText, Key, Globe } from 'lucide-react'
+import { Play, Square, Trash2, ScrollText, Key, Globe, Power } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -66,6 +66,9 @@ export function TunnelCard({ tunnel, status }: TunnelCardProps) {
             </p>
           </div>
           <div className="flex items-center gap-2 ml-2 shrink-0">
+            {tunnel.autoStart && (
+              <Badge variant="outline" className="text-xs text-green-500 border-green-500/30">自动</Badge>
+            )}
             {!hasToken && (
               <Badge variant="outline" className="text-xs">需要 Token</Badge>
             )}
@@ -121,6 +124,14 @@ export function TunnelCard({ tunnel, status }: TunnelCardProps) {
                 <Key className="mr-1 h-3 w-3" /> 填写 Token
               </Button>
             )}
+            <Button
+              size="sm"
+              variant={tunnel.autoStart ? 'default' : 'ghost'}
+              onClick={() => updateTunnel(tunnel.id, { autoStart: !tunnel.autoStart })}
+              title={tunnel.autoStart ? '已开启自动启动' : '点击开启自动启动'}
+            >
+              <Power className={`h-3 w-3 ${tunnel.autoStart ? 'text-green-400' : ''}`} />
+            </Button>
             <Button size="sm" variant="ghost" onClick={() => navigate('/logs')} title="查看日志">
               <ScrollText className="h-3 w-3" />
             </Button>

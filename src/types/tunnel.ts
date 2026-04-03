@@ -23,6 +23,7 @@ export interface TunnelConfig {
   credentialsFile?: string
   ingress?: TunnelIngress[]
   originRequest?: Record<string, unknown>
+  autoStart?: boolean
 }
 
 export interface TunnelStatus {

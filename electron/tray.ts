@@ -1,11 +1,21 @@
-import { Tray, Menu, BrowserWindow, nativeImage, app } from 'electron'
+import { Tray, Menu, BrowserWindow, app, nativeImage } from 'electron'
 import path from 'path'
 
 let tray: Tray | null = null
 
 export function createTray(mainWindow: BrowserWindow) {
-  // 创建一个简单的 16x16 图标
-  const icon = nativeImage.createEmpty()
+  // 使用应用图标
+  const iconPath = path.join(
+    process.env.VITE_PUBLIC || path.join(__dirname, '../public'),
+    'icon.ico'
+  )
+  let icon: Electron.NativeImage
+  try {
+    icon = nativeImage.createFromPath(iconPath)
+  } catch {
+    icon = nativeImage.createEmpty()
+  }
+
   tray = new Tray(icon)
 
   const contextMenu = Menu.buildFromTemplate([

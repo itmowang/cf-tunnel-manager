@@ -48,7 +48,10 @@ export function Sidebar() {
             {runningCount} 个隧道运行中
           </div>
         )}
-        <p className="text-xs text-muted-foreground">v0.1.0</p>
+        <p className="text-xs text-muted-foreground">v0.2.0</p>
+        <p className="text-[10px] text-muted-foreground mt-1">
+          © <a href="https://github.com/itmowang" target="_blank" rel="noopener" className="hover:underline">魔王</a>
+        </p>
       </div>
     </aside>
   )

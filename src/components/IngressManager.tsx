@@ -188,7 +188,10 @@ export function IngressManager({ tunnel, open, onOpenChange }: Props) {
           <CardDescription>配置子域名到本地服务的映射，保存后推送到 Cloudflare</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <pre className="text-[10px] text-muted-foreground bg-muted rounded p-2 whitespace-pre-wrap break-all border">{info}</pre>
+          <details className="text-[10px] text-muted-foreground bg-muted rounded border">
+            <summary className="px-2 py-1.5 cursor-pointer hover:bg-muted/80 select-none">日志信息</summary>
+            <pre className="px-2 pb-2 whitespace-pre-wrap break-all">{info}</pre>
+          </details>
 
           {loading ? (
             <div className="flex items-center justify-center py-8"><RefreshCw className="h-5 w-5 animate-spin text-muted-foreground" /><span className="ml-2 text-sm text-muted-foreground">加载中...</span></div>
