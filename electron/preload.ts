@@ -42,6 +42,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.invoke('cf:listAccounts', apiToken),
   listTunnels: (accountId: string, apiToken: string) =>
     ipcRenderer.invoke('cf:listTunnels', accountId, apiToken),
+  createTunnel: (accountId: string, name: string, apiToken: string) =>
+    ipcRenderer.invoke('cf:createTunnel', accountId, name, apiToken),
   getTunnelToken: (accountId: string, tunnelId: string, apiToken: string) =>
     ipcRenderer.invoke('cf:getTunnelToken', accountId, tunnelId, apiToken),
   listZones: (apiToken: string) =>

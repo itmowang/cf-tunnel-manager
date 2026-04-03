@@ -1,4 +1,5 @@
 import https from 'https'
+import crypto from 'crypto'
 
 // 通用 CF API 响应
 interface CfResponse {
@@ -63,6 +64,28 @@ export async function listAccounts(apiToken: string): Promise<{ success: boolean
     if (!res.success) return { success: false, error: res.errors?.[0]?.message || '获取账户失败' }
     const accounts = (res.result as Array<{ id: string; name: string }>)
     return { success: true, accounts }
+  } catch (err: unknown) {
+    return { success: false, error: err instanceof Error ? err.message : String(err) }
+  }
+}
+
+/** 创建新隧道 */
+export async function createTunnel(
+  accountId: string, name: string, apiToken: string
+): Promise<{ success: boolean; tunnel?: { id: string; name: string }; error?: string }> {
+  try {
+    // 生成随机 secret
+    const secret = crypto.randomBytes(32).toString('base64')
+    const res = await cfRequest('POST', `/accounts/${accountId}/cfd_tunnel`, apiToken, {
+      name,
+      tunnel_secret: secret,
+      config_src: 'cloudflare',
+    })
+    if (res.success && res.result) {
+      const t = res.result as { id: string; name: string }
+      return { success: true, tunnel: { id: t.id, name: t.name } }
+    }
+    return { success: false, error: res.errors?.[0]?.message || '创建失败' }
   } catch (err: unknown) {
     return { success: false, error: err instanceof Error ? err.message : String(err) }
   }

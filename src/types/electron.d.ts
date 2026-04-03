@@ -28,6 +28,7 @@ export interface ElectronAPI {
   verifyToken: (apiToken: string) => Promise<{ success: boolean; error?: string }>
   listAccounts: (apiToken: string) => Promise<{ success: boolean; accounts?: Array<{ id: string; name: string }>; error?: string }>
   listTunnels: (accountId: string, apiToken: string) => Promise<{ success: boolean; tunnels?: Array<{ id: string; name: string; status: string; created_at: string }>; error?: string }>
+  createTunnel: (accountId: string, name: string, apiToken: string) => Promise<{ success: boolean; tunnel?: { id: string; name: string }; error?: string }>
   getTunnelToken: (accountId: string, tunnelId: string, apiToken: string) => Promise<{ success: boolean; token?: string; error?: string }>
   listZones: (apiToken: string) => Promise<{ success: boolean; zones?: Array<{ id: string; name: string; status: string }>; error?: string }>
   listDnsRecords: (zoneId: string, apiToken: string) => Promise<{ success: boolean; records?: Array<{ id: string; name: string; type: string; content: string; proxied: boolean }>; error?: string }>

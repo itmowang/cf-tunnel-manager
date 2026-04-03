@@ -6,7 +6,7 @@ import { createTray } from './tray'
 import { TunnelManager } from './tunnelManager'
 import { loadData, saveData } from './configStore'
 import { downloadCloudflared, getDefaultCloudflaredPath, isCloudflaredDownloaded } from './cloudflaredDownloader'
-import { decodeToken, getTunnelConfig, updateTunnelConfig, verifyToken, listZones, listDnsRecords, listAccounts, listTunnels, getTunnelToken, ensureTunnelDns } from './cloudflareApi'
+import { decodeToken, getTunnelConfig, updateTunnelConfig, verifyToken, listZones, listDnsRecords, listAccounts, listTunnels, getTunnelToken, ensureTunnelDns, createTunnel } from './cloudflareApi'
 import { setupAutoUpdater } from './updater'
 
 let mainWindow: BrowserWindow | null = null
@@ -160,6 +160,10 @@ function registerIpcHandlers() {
 
   ipcMain.handle('cf:listTunnels', async (_e, accountId: string, apiToken: string) => {
     return listTunnels(accountId, apiToken)
+  })
+
+  ipcMain.handle('cf:createTunnel', async (_e, accountId: string, name: string, apiToken: string) => {
+    return createTunnel(accountId, name, apiToken)
   })
 
   ipcMain.handle('cf:getTunnelToken', async (_e, accountId: string, tunnelId: string, apiToken: string) => {
