@@ -139,9 +139,17 @@ export default function SettingsPage() {
           {tokenStatus === 'invalid' && tokenError && (
             <p className="text-xs text-destructive">{tokenError}</p>
           )}
-          <p className="text-xs text-muted-foreground">
-            去 dash.cloudflare.com/profile/api-tokens 创建，权限需要：Zone:Read + Cloudflare Tunnel:Edit
-          </p>
+          <div className="text-xs text-muted-foreground space-y-1">
+            <p>
+              去 <a href="https://dash.cloudflare.com/profile/api-tokens" target="_blank" rel="noopener" className="text-primary underline underline-offset-2 hover:text-primary/80">dash.cloudflare.com/profile/api-tokens</a> 创建 Custom Token，需要以下权限：
+            </p>
+            <ul className="list-disc pl-4 space-y-0.5">
+              <li>Account &gt; Cloudflare Tunnel &gt; Edit</li>
+              <li>Zone &gt; Zone &gt; Read</li>
+              <li>Zone &gt; DNS &gt; Edit</li>
+            </ul>
+            <p>Zone Resources 选择 <span className="font-medium">All zones</span> 或指定需要的域名</p>
+          </div>
         </CardContent>
       </Card>
 

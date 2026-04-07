@@ -4,6 +4,7 @@ export interface ElectronAPI {
   maximize: () => Promise<boolean>
   closeWindow: () => Promise<void>
   isMaximized: () => Promise<boolean>
+  openExternal: (url: string) => Promise<void>
 
   // 数据持久化
   loadData: () => Promise<{ tunnels: unknown[]; appConfig: Record<string, unknown> }>

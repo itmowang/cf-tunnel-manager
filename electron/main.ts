@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, dialog } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron'
 import path from 'path'
 import fs from 'fs'
 import yaml from 'js-yaml'
@@ -37,6 +37,22 @@ function createWindow() {
     mainWindow.loadFile(path.join(__dirname, '../dist/index.html'))
   }
 
+  // 外部链接在系统浏览器打开
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (url.startsWith('https://') || url.startsWith('http://')) {
+      const { shell } = require('electron')
+      shell.openExternal(url)
+    }
+    return { action: 'deny' }
+  })
+  mainWindow.webContents.on('will-navigate', (e, url) => {
+    if (url !== process.env.VITE_DEV_SERVER_URL && !url.startsWith('file://')) {
+      e.preventDefault()
+      const { shell } = require('electron')
+      shell.openExternal(url)
+    }
+  })
+
   mainWindow.on('close', (e) => {
     const data = loadData()
     if (data.appConfig.minimizeToTray) {
@@ -56,6 +72,7 @@ function registerIpcHandlers() {
   })
   ipcMain.handle('window:close', () => { mainWindow?.close() })
   ipcMain.handle('window:isMaximized', () => mainWindow?.isMaximized())
+  ipcMain.handle('shell:openExternal', (_e, url: string) => { shell.openExternal(url) })
 
   // ---- 数据持久化 ----
   ipcMain.handle('store:load', () => {

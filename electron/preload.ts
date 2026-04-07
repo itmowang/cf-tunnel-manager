@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   maximize: () => ipcRenderer.invoke('window:maximize'),
   closeWindow: () => ipcRenderer.invoke('window:close'),
   isMaximized: () => ipcRenderer.invoke('window:isMaximized'),
+  openExternal: (url: string) => ipcRenderer.invoke('shell:openExternal', url),
 
   // 数据持久化
   loadData: () => ipcRenderer.invoke('store:load'),

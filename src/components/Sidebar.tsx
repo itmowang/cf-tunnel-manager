@@ -56,7 +56,7 @@ export function Sidebar() {
         )}
         <p className="text-xs text-muted-foreground">v{version}</p>
         <p className="text-[10px] text-muted-foreground mt-1">
-          © <a href="https://github.com/itmowang" target="_blank" rel="noopener" className="hover:underline">魔王</a>
+          © <a href="#" onClick={(e) => { e.preventDefault(); window.electronAPI?.openExternal('https://github.com/itmowang') }} className="hover:underline cursor-pointer">魔王</a>
         </p>
       </div>
     </aside>
